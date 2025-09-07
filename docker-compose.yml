@@ -1,0 +1,47 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  server:
+    build: ./server
+    container_name: server
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mern_app
+    depends_on:
+      - mongo
+    command: ["node", "src/index.js"]
+
+  client:
+    build: ./client
+    container_name: client
+    ports:
+      - "3001:80"
+    depends_on:
+      - server
+    command: ["nginx", "-g", "daemon off;"]
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - server
+      - client
+
+volumes:
+  mongo_data:
+  jenkins_home:
+
