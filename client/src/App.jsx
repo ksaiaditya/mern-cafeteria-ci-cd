@@ -1,18 +1,52 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Users from "./pages/Users";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
 
-export default function App() {
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Menu from "./pages/CustomerMenu";
+import Admin from "./pages/Admin";
+import Kitchen from "./pages/Kitchen";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+
+function App() {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+
   return (
     <Router>
-      <nav className="p-4 bg-gray-200">
-        <Link to="/" className="mr-4">Home</Link>
-        <Link to="/users">Users</Link>
-      </nav>
+      {/* Navbar always shows */}
+      <Navbar />
 
       <Routes>
-        <Route path="/" element={<h1 className="text-center mt-20">Home Page</h1>} />
-        <Route path="/users" element={<Users />} />
+        {/* Public routes */}
+        <Route path="/" element={<Menu />} /> {/* Default = Menu */}
+        <Route path="/menu" element={<Menu />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/cart" element={<Cart />} />
+
+        {/* Checkout requires login */}
+        <Route
+          path="/checkout"
+          element={token ? <Checkout /> : <Navigate to="/login" />}
+        />
+
+        {/* Role-based routes */}
+        <Route
+          path="/admin"
+          element={token && role === "admin" ? <Admin /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/kitchen"
+          element={token && role === "kitchen" ? <Kitchen /> : <Navigate to="/login" />}
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
 }
+
+export default App;
