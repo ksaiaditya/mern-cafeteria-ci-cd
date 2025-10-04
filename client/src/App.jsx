@@ -8,6 +8,8 @@ import Admin from "./pages/Admin";
 import Kitchen from "./pages/Kitchen";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import MyOrders from "./pages/MyOrders";
+import QRCodeGenerator from "./pages/QRCodeGenerator";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -26,10 +28,14 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/cart" element={<Cart />} />
 
-        {/* Checkout requires login */}
+        {/* Protected customer routes */}
         <Route
           path="/checkout"
           element={token ? <Checkout /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/my-orders"
+          element={token ? <MyOrders /> : <Navigate to="/login" />}
         />
 
         {/* Role-based routes */}
@@ -40,6 +46,10 @@ function App() {
         <Route
           path="/kitchen"
           element={token && role === "kitchen" ? <Kitchen /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/qr-code"
+          element={token && role === "admin" ? <QRCodeGenerator /> : <Navigate to="/login" />}
         />
 
         {/* Fallback */}
