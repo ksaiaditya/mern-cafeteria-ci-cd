@@ -11,10 +11,12 @@ const orderSchema = new mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ["pending", "preparing", "completed"],
+      enum: ["pending", "preparing", "completed", "cancelled"],
       default: "pending",
     },
     totalPrice: { type: Number, required: true },
+    customerName: { type: String },
+    notes: { type: String },
   },
   { timestamps: true }
 );

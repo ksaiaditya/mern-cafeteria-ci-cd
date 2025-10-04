@@ -4,7 +4,7 @@ import Menu from "../models/menuModel.js";
 // Place new order (Customer)
 export const placeOrder = async (req, res) => {
   try {
-    const { items } = req.body;
+    const { items, customerName, notes } = req.body;
 
     // Calculate total price
     let totalPrice = 0;
@@ -15,12 +15,18 @@ export const placeOrder = async (req, res) => {
     }
 
     const order = new Order({
-      customer: req.user._id,
+      user: req.user._id,
       items,
       totalPrice,
+      customerName,
+      notes,
     });
 
     await order.save();
+    
+    // Populate the order with menu item details before sending response
+    await order.populate("items.menuItem", "name price");
+    
     res.status(201).json(order);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -31,8 +37,9 @@ export const placeOrder = async (req, res) => {
 export const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find()
-      .populate("customer", "name email")
-      .populate("items.menuItem", "name price");
+      .populate("user", "name email")
+      .populate("items.menuItem", "name price")
+      .sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -57,8 +64,9 @@ export const updateOrderStatus = async (req, res) => {
 // Get my orders (Customer only)
 export const getMyOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ customer: req.user._id })
-      .populate("items.menuItem", "name price");
+    const orders = await Order.find({ user: req.user._id })
+      .populate("items.menuItem", "name price")
+      .sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
     res.status(500).json({ error: error.message });

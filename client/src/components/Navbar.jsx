@@ -25,22 +25,27 @@ export default function Navbar() {
 
         {/* Role-based links */}
         {role === "admin" && (
-          <Link to="/admin" className="hover:text-gray-200">
-            Admin
-          </Link>
+          <>
+            <Link to="/admin" className="hover:text-gray-200">
+              📊 Admin
+            </Link>
+            <Link to="/qr-code" className="hover:text-gray-200">
+              📱 QR Code
+            </Link>
+          </>
         )}
         {role === "kitchen" && (
           <Link to="/kitchen" className="hover:text-gray-200">
-            Kitchen
+            👨‍🍳 Kitchen
           </Link>
         )}
-        {role === "customer" && (
+        {token && (
           <>
             <Link to="/cart" className="hover:text-gray-200">
-              Cart
+              🛒 Cart
             </Link>
-            <Link to="/orders" className="hover:text-gray-200">
-              My Orders
+            <Link to="/my-orders" className="hover:text-gray-200">
+              📋 My Orders
             </Link>
           </>
         )}
