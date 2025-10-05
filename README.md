@@ -347,7 +347,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Author
 
-**Aditya Karnam**
+**Karnati Sai Aditya**
 - GitHub: [@ksaiaditya](https://github.com/ksaiaditya)
 - Repository: [mern-cafeteria-ci-cd](https://github.com/ksaiaditya/mern-cafeteria-ci-cd)
 
